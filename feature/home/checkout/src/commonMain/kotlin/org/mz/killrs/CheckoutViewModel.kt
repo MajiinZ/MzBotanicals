@@ -88,10 +88,10 @@ class CheckoutViewModel(
         )
     }
 
-    fun startAeropayCheckout(onError: (String) -> Unit) {
-        onError(
-            "AeroPay onboarding is required before Pay by Bank can be enabled. " +
-                    "No order has been created or charged."
-        )
+    fun startMockAeropayCheckout(onSuccess: () -> Unit) {
+        if (!isFormValid) return
+
+        // Demo only: no payment request, order creation, or cart mutation.
+        onSuccess()
     }
 }

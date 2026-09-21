@@ -135,8 +135,8 @@ fun CheckoutScreen(
                         icon = Resources.Image.KillrsLogo,
                         enabled = isFormValid,
                         onClick = {
-                            viewModel.startAeropayCheckout(
-                                onError = messageBarState::addError
+                            viewModel.startMockAeropayCheckout(
+                                onSuccess = { navigateToPaymentCompleted(true, null) }
                             )
 
                         })

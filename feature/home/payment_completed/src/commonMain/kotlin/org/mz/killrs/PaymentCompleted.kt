@@ -30,9 +30,13 @@ fun PaymentCompleted(
             contentAlignment = Alignment.Center
         ){
             InfoCard(
-                title = if (isSuccess != null) "Success!" else "Oops",
-                subtitle = if(isSuccess != null) "Your purchase is on the way" else error ?: "Something went wrong",
-                image = if(isSuccess !=null) Resources.Image.KillrsLogo else Resources.Image.Delete
+                title = if (isSuccess == true) "Success!" else "Oops",
+                subtitle = if (isSuccess == true) {
+                    "Mock payment completed. No payment was charged."
+                } else {
+                    error ?: "Something went wrong"
+                },
+                image = if (isSuccess == true) Resources.Image.KillrsLogo else Resources.Image.Delete
                 )
 
 
