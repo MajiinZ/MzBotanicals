@@ -92,7 +92,7 @@ fun AuthenticationScreen(
                     ) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "KillrsGenetics",
+                            text = "MZBotanicals",
                             textAlign = TextAlign.Center,
                             fontFamily = Exo2FontRegular(),
                             fontSize = FontSize.EXTRA_LARGE,

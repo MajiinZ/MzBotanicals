@@ -8,6 +8,7 @@ import org.mz.killrs.shared.util.RequestState
 
 interface ProductRepository {
     fun getCurrentUserId(): String?
+    fun readAllProducts(): Flow<RequestState<List<Product>>>
     fun readNewAndDiscountedProducts(): Flow<RequestState<List<Product>>>
     fun readNewProducts(): Flow<RequestState<List<Product>>>
     fun readProductByIdFlow(id: String): Flow<RequestState<Product>>

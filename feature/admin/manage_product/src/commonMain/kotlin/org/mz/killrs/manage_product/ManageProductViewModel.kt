@@ -23,7 +23,7 @@ data class ManageProductState(
     val createdAt: Long = Clock.System.now().toEpochMilliseconds(),
     val title: String = "",
     val description: String = "",
-    val thumbnail: String = "thumbnail image",
+    val thumbnail: String = "",
     val category: ProductCategory = ProductCategory.Sativa,
     val strains: String = "",
     val amountOfSeeds: Int? = null,
@@ -51,8 +51,9 @@ class ManageProductViewModel(
     val isFormValid: Boolean
         get() = screenState.title.isNotBlank() &&
                 screenState.description.isNotBlank() &&
-                screenState.thumbnail.isNotBlank() &&
-                screenState.price != 0.0
+                screenState.amountOfSeeds != null &&
+                (screenState.amountOfSeeds ?: -1) >= 0 &&
+                screenState.price > 0.0
 
 
     init {
@@ -81,7 +82,7 @@ class ManageProductViewModel(
             } ?: run {
                 ""
             },
-            amountOfSeeds = product.amountOfSeeds?.toInt(),
+            amountOfSeeds = product.amountOfSeeds?.toIntOrNull(),
             price = product.price,
             isNew = product.isNew,
             isPopular = product.isPopular,
@@ -130,6 +131,10 @@ class ManageProductViewModel(
 
     // === Create or Update Product ===
     fun createNewProduct(onSuccess: () -> Unit, onError: (String) -> Unit) {
+        if (!isFormValid) {
+            onError("Add a title, description, valid stock amount, and price before saving.")
+            return
+        }
         viewModelScope.launch {
             adminRepository.createNewProduct(
                 product = screenState.toProduct(),
@@ -152,7 +157,7 @@ class ManageProductViewModel(
                         category = screenState.category.name,
                         strains = screenState.strains.split(",").map { it.trim() }
                             .filter { it.isNotEmpty() },
-                        amountOfSeeds = screenState.amountOfSeeds.toString(),
+                        amountOfSeeds = screenState.amountOfSeeds?.toString(),
                         price = screenState.price,
                         isNew = screenState.isNew,
                         isPopular = screenState.isPopular,
@@ -303,7 +308,7 @@ class ManageProductViewModel(
         thumbnail = thumbnail,
         category = category.name,
         strains = strains.split(",").map { it.trim() }.filter { it.isNotEmpty() },
-        amountOfSeeds = amountOfSeeds.toString(),
+        amountOfSeeds = amountOfSeeds?.toString(),
         price = price,
         isNew = isNew,
         isPopular = isPopular,

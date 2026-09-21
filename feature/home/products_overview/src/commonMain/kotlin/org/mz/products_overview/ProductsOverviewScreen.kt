@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -66,67 +67,100 @@ fun ProductsOverviewScreen(
                 targetState = productList.distinctBy { it.id }
             ) { products ->
                 if (products.isNotEmpty()) {
-                    Column {
-                        Spacer(modifier = Modifier.height(12.dp))
-                        LazyRow(
-                            state = listState,
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            itemsIndexed(
-                                items = products
-                                    .filter { it.isNew == true }
-                                    .sortedBy { it.createdAt }
-                                    .take(6),
-                                key = { index, item -> item.id }
-                            ) { index, product ->
-                                val isLarge = index == centeredIndex
-                                val animatedScale by animateFloatAsState(
-                                    targetValue = if (isLarge) 1f else 0.8f,
-                                    animationSpec = tween(300)
-                                )
+                    val newProducts = products
+                        .filter { it.isNew }
+                        .sortedByDescending { it.createdAt }
+                        .take(6)
+                    val discountedProducts = products
+                        .filter { it.isDiscounted }
+                        .sortedByDescending { it.createdAt }
+                        .take(3)
 
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        if (newProducts.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            LazyRow(
+                                state = listState,
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                itemsIndexed(
+                                    items = newProducts,
+                                    key = { _, item -> item.id }
+                                ) { index, product ->
+                                    val isLarge = index == centeredIndex
+                                    val animatedScale by animateFloatAsState(
+                                        targetValue = if (isLarge) 1f else 0.8f,
+                                        animationSpec = tween(300)
+                                    )
 
-                                MainProductCard(
-                                    modifier = Modifier
-                                        .scale(animatedScale)
-                                        .height(200.dp)
-                                        .fillParentMaxWidth(0.6f),
-                                    product = product,
-                                    isLarge = isLarge,
-                                    onClick = {
-                                        navigateToDetails(it)
-                                    }
-                                )
+                                    MainProductCard(
+                                        modifier = Modifier
+                                            .scale(animatedScale)
+                                            .height(200.dp)
+                                            .fillParentMaxWidth(0.6f),
+                                        product = product,
+                                        isLarge = isLarge,
+                                        onClick = navigateToDetails
+                                    )
+                                }
                             }
                         }
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .alpha(Alpha.HALF),
-                            text = "Discounted Products",
-                            fontSize = FontSize.EXTRA_REGULAR,
-                            color = TextPrimary,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
+
                         LazyColumn(
-                            modifier = Modifier.padding(horizontal = 12.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 12.dp),
+                            contentPadding = PaddingValues(bottom = 12.dp),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
-                            items(
-                                items = products
-                                    .filter { it.isDiscounted == true }
-                                    .sortedBy { it.createdAt }
-                                    .take(3),
+                            if (discountedProducts.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp, bottom = 4.dp)
+                                            .alpha(Alpha.HALF),
+                                        text = "Discounted Genetics",
+                                        fontSize = FontSize.EXTRA_REGULAR,
+                                        color = TextPrimary,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                                items(
+                                    items = discountedProducts,
+                                    key = { "discounted-${it.id}" }
+                                ) { product ->
+                                    ProductCard(
+                                        product = product,
+                                        onClick = navigateToDetails,
+                                    )
+                                }
+                            }
 
-                                key = { it.id }
+                            item {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            top = if (discountedProducts.isEmpty()) 24.dp else 12.dp,
+                                            bottom = 4.dp
+                                        )
+                                        .alpha(Alpha.HALF),
+                                    text = "All Genetics",
+                                    fontSize = FontSize.EXTRA_REGULAR,
+                                    color = TextPrimary,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                            items(
+                                items = products.sortedByDescending { it.createdAt },
+                                key = { "catalog-${it.id}" }
                             ) { product ->
                                 ProductCard(
                                     product = product,
-                                    onClick = {navigateToDetails(it)},
+                                    onClick = navigateToDetails,
                                 )
                             }
                         }

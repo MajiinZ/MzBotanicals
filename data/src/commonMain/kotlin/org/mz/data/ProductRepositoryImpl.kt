@@ -17,6 +17,42 @@ class ProductRepositoryImpl : ProductRepository {
         return Firebase.auth.currentUser?.uid
     }
 
+    override fun readAllProducts(): Flow<RequestState<List<Product>>> = channelFlow {
+        try {
+            if (getCurrentUserId() != null) {
+                Firebase.firestore
+                    .collection("product")
+                    .snapshots
+                    .collectLatest { query ->
+                        val products = query.documents.map { document ->
+                            Product(
+                                id = document.id,
+                                title = document.get("title"),
+                                amountOfSeeds = document.get("amountOfSeeds"),
+                                description = document.get("description"),
+                                thumbnail = document.get("thumbnail"),
+                                category = document.get("category"),
+                                strains = document.get("strains"),
+                                price = document.get("price"),
+                                isPopular = document.get("isPopular"),
+                                isDiscounted = document.get("isDiscounted"),
+                                isNew = document.get("isNew"),
+                                createdAt = document.get("createdAt")
+                            )
+                        }
+                            .sortedByDescending { it.createdAt }
+                            .map { it.copy(title = it.title.uppercase()) }
+
+                        send(RequestState.Success(products))
+                    }
+            } else {
+                send(RequestState.Error("User is not available."))
+            }
+        } catch (e: Exception) {
+            send(RequestState.Error("Error while reading products: ${e.message}"))
+        }
+    }
+
     override fun readNewAndDiscountedProducts(): Flow<RequestState<List<Product>>> = channelFlow {
         try {
             val userId = getCurrentUserId()

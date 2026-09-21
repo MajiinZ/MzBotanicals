@@ -48,18 +48,41 @@ class AdminRepositoryImpl : AdminRepository {
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun uploadImageToStorage(file: File): String? {
-        return if (getCurrentUserId() != null && isAuthorizedAdmin()) {
-            val storage = Firebase.storage.reference
-            val imagePath = storage.child(path = "images/${Uuid.random().toHexString()}")
-            try {
-                withTimeout(timeMillis = 20000L) {
-                    imagePath.putFile(file)
-                    imagePath.getDownloadUrl()
-                }
-            } catch (e: Exception) {
-                null
+        if (getCurrentUserId() == null || !isAuthorizedAdmin()) {
+            throw IllegalStateException("Administrator access is required.")
+        }
+
+        val storage = Firebase.storage.reference
+        val imagePath = storage.child(path = "images/${Uuid.random().toHexString()}")
+        return try {
+            withTimeout(timeMillis = 20000L) {
+                imagePath.putFile(file)
+                imagePath.getDownloadUrl()
             }
-        } else null
+        } catch (error: Exception) {
+            val details = error.causeMessages().lowercase()
+            val message = when {
+                "billing account" in details || "httpresult: 402" in details ->
+                    "Image uploads are unavailable because Firebase billing is closed. " +
+                            "Reopen or attach an active Google Cloud billing account, then try again."
+                "permission" in details || "unauthorized" in details ->
+                    "Firebase Storage denied this upload. Check the Storage security rules."
+                "timeout" in details ->
+                    "The image upload timed out. Check your connection and try a smaller image."
+                else -> "Image upload failed: ${error.message ?: "Unknown Firebase Storage error."}"
+            }
+            throw IllegalStateException(message, error)
+        }
+    }
+
+    private fun Throwable.causeMessages(): String {
+        val messages = mutableListOf<String>()
+        var current: Throwable? = this
+        while (current != null) {
+            current.message?.let(messages::add)
+            current = current.cause
+        }
+        return messages.joinToString(" ")
     }
 
     override suspend fun deleteImageFromStorage(
@@ -282,7 +305,7 @@ class AdminRepositoryImpl : AdminRepository {
                                 Product(
                                     id = document.id,
                                     title = document.get(field = "title"),
-                                    amountOfSeeds = document.get(field = "createdAt"),
+                                    amountOfSeeds = document.get(field = "amountOfSeeds"),
                                     description = document.get(field = "description"),
                                     thumbnail = document.get(field = "thumbnail"),
                                     category = document.get(field = "category"),

@@ -110,6 +110,8 @@ fun DetailsScreen(
                                 .data(selectedProduct.thumbnail)
                                 .crossfade(true)
                                 .build(),
+                            error = painterResource(Resources.Image.KillrsLogo),
+                            fallback = painterResource(Resources.Image.KillrsLogo),
                             contentDescription = null,
                             contentScale = ContentScale.Crop
                         )

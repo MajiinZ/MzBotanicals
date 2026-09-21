@@ -80,6 +80,8 @@ fun CartItemCard(
                 .data(product.thumbnail)
                 .crossfade(enable = true)
                 .build(),
+            error = painterResource(Resources.Image.KillrsLogo),
+            fallback = painterResource(Resources.Image.KillrsLogo),
             contentDescription = "Product thumbnail image",
             contentScale = ContentScale.Crop
         )

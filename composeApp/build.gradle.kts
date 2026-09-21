@@ -2,6 +2,17 @@ import com.android.build.gradle.internal.ide.kmp.KotlinAndroidSourceSetMarker.Co
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.File
+import java.util.Properties
+
+val releaseSigningPropertiesFile =
+    File(System.getProperty("user.home"), ".android/killrsgenetics-upload.properties")
+val releaseSigningProperties = Properties().apply {
+    if (releaseSigningPropertiesFile.isFile) {
+        releaseSigningPropertiesFile.inputStream().use(::load)
+    }
+}
+val hasReleaseSigningProperties = releaseSigningPropertiesFile.isFile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -103,6 +114,17 @@ android {
     namespace = "org.mz.killrs"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    signingConfigs {
+        if (hasReleaseSigningProperties) {
+            create("release") {
+                storeFile = file(releaseSigningProperties.getProperty("storeFile"))
+                storePassword = releaseSigningProperties.getProperty("storePassword")
+                keyAlias = releaseSigningProperties.getProperty("keyAlias")
+                keyPassword = releaseSigningProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
     defaultConfig {
         applicationId = "org.mz.killrs"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -120,6 +142,9 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            if (hasReleaseSigningProperties) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 

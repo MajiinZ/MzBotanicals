@@ -52,6 +52,8 @@ fun ProductCard(
                 .data(product.thumbnail)
                 .crossfade(true)
                 .build(),
+            error = painterResource(Resources.Image.KillrsLogo),
+            fallback = painterResource(Resources.Image.KillrsLogo),
             contentDescription = "Product thumbnail image",
             contentScale = ContentScale.Crop
         )

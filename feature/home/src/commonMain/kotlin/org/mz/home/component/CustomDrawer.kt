@@ -44,7 +44,7 @@ fun CustomDrawer(
         Spacer(modifier = Modifier.height(50.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "KillrsGenetics",
+            text = "MZBotanicals",
             textAlign = TextAlign.Center,
             color = TextSecondary,
             fontFamily = Exo2FontRegular(),
