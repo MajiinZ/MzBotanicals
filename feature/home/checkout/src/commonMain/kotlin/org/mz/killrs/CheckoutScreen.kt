@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,8 @@ import org.mz.killrs.shared.TextPrimary
 import org.mz.killrs.shared.TextWhite
 import org.mz.killrs.shared.component.CheckoutForm
 import org.mz.killrs.shared.component.PrimaryButton
+import org.mz.killrs.shared.util.RequestState
+import org.mz.killrs.shared.util.formatUsd
 import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +50,11 @@ fun CheckoutScreen(
     val screenState = viewModel.screenState
     val isFormValid = viewModel.isFormValid
 
+    LaunchedEffect(viewModel.screenReady) {
+        val state = viewModel.screenReady
+        if (state is RequestState.Error) messageBarState.addError(state.message)
+    }
+
     Scaffold(
         containerColor = Surface,
         topBar = {
@@ -61,7 +69,7 @@ fun CheckoutScreen(
                 },
                 actions = {
                     Text(
-                        text = "$${totalAmount}",
+                        text = formatUsd(totalAmount),
                         fontSize = FontSize.EXTRA_MEDIUM,
                         fontWeight = FontWeight.Medium,
                         color = TextPrimary
@@ -118,7 +126,7 @@ fun CheckoutScreen(
                     lastName = screenState.lastName,
                     onLastNameChanged = viewModel::updateLastName,
                     email = screenState.email,
-                    onEmailChanged = { viewModel.screenState.copy(email = it) },
+                    onEmailChanged = viewModel::updateEmail,
                     city = screenState.city.orEmpty(),
                     onCityChanged = viewModel::updateCity,
                     state = screenState.stateNames.name,
@@ -131,12 +139,14 @@ fun CheckoutScreen(
 
                 Column {
                     PrimaryButton(
-                        text = "Pay by bank with AeroPay",
+                        text = if (viewModel.isSubmitting) "Saving your order..." else "Pay by bank with AeroPay",
                         icon = Resources.Image.KillrsLogo,
-                        enabled = isFormValid,
+                        enabled = isFormValid && !viewModel.isSubmitting,
                         onClick = {
                             viewModel.startMockAeropayCheckout(
-                                onSuccess = { navigateToPaymentCompleted(true, null) }
+                                expectedTotal = totalAmount,
+                                onSuccess = { navigateToPaymentCompleted(true, null) },
+                                onError = messageBarState::addError
                             )
 
                         })

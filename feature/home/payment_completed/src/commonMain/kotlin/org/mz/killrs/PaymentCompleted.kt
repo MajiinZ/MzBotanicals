@@ -32,7 +32,7 @@ fun PaymentCompleted(
             InfoCard(
                 title = if (isSuccess == true) "Success!" else "Oops",
                 subtitle = if (isSuccess == true) {
-                    "Mock payment completed. No payment was charged."
+                    "Your demo order was saved. Open Orders from the menu to view it. No payment was charged."
                 } else {
                     error ?: "Something went wrong"
                 },

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -297,7 +296,9 @@ fun HomeGraphScreen(
                                 )
                             }
                             composable<Screen.Orders> {
-                                DrawerDestinationScreen(title = "Orders")
+                                OrdersScreen(
+                                    navigateToShop = { navigateFromDrawer(Screen.ProductsOverview) }
+                                )
                             }
                             composable<Screen.Settings> {
                                 SettingsScreen()
@@ -341,21 +342,5 @@ fun HomeGraphScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun DrawerDestinationScreen(title: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize()
-    ) {
-        Text(
-            text = title,
-            fontFamily = Exo2FontRegular(),
-            fontSize = FontSize.LARGE,
-            color = TextPrimary
-        )
     }
 }

@@ -11,7 +11,7 @@ data class CheckoutScreenState(
     val lastName: String = "",
     val email: String = "",
     val city: String? = null,
-    val postalCode: Int? = null,
+    val postalCode: String? = null,
     val address: String? = null,
     val stateNames: StateOfUs = StateOfUs(name = "", abbreviation = ""),
     val phoneNumber: PhoneNumber? = null,

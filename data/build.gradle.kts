@@ -36,6 +36,8 @@ kotlin {
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.storage)
             implementation(libs.auth.firebase.kmp)
+            implementation(libs.kotlinx.serialization)
+            implementation(libs.kotlinx.coroutines.core)
 
             implementation(project(path = ":shared"))
 
@@ -43,6 +45,9 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        androidUnitTest.dependencies {
+            implementation(libs.kotlin.test.junit)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

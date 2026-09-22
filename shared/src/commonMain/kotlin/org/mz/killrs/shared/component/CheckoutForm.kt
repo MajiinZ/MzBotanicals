@@ -64,8 +64,11 @@ fun CheckoutForm(
         CustomTextField(
             value = state,
             onValueChange = onStateSelect,
-            placeholder = "State",
-            error = state.length !in 2..50
+            placeholder = "State (name or abbreviation)",
+            error = statesOfUs.none {
+                it.name.equals(state.trim(), ignoreCase = true) ||
+                        it.abbreviation.equals(state.trim(), ignoreCase = true)
+            }
         )
         CustomTextField(
             value = address,
