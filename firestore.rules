@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function verified() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    // Existing realtime reads remain available. All writes go through the API.
+    match /product/{id} {
+      allow read: if verified();
+      allow write: if false;
+    }
+    match /customer/{uid} {
+      allow get: if verified() && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+    // Drafts, legacy orders, audit records, and unknown collections are API-only.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

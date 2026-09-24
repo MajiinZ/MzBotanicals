@@ -1,5 +1,7 @@
 🌱 MzBotanicals — Kotlin Multiplatform E-Commerce App
 
+Backend setup, API contract, security tests and rollout instructions: [server/README.md](server/README.md).
+
 MzBotanicals is a secure, modern e-commerce platform built using Kotlin Multiplatform (KMP). Designed for the sale of premium genetics—including specialized seeds and branded merchandise—this cross-platform project emphasizes performance, privacy, and a seamless shopping experience.
 
 ⚖️ Legal Disclaimer
@@ -35,18 +37,18 @@ server/
 Ktor-based backend with integration for:
 
 Firebase Authentication
-Secure order handling
-Email-based order notifications
-🔒 Note: This folder contains sensitive backend logic and is not publicly available.
+Server-validated profiles, carts and catalog management
+Server-priced quotes and idempotent order drafts
+The server is an independent Ktor/Firebase build. Payments are deliberately disabled until provider onboarding and server-side payment verification are implemented.
 
 🔐 Key Features
 
 Secure Firebase Authentication
 Supports Google Sign-In for streamlined user access.
-Real-Time Inventory Management
-Admins can adjust product stock via Firebase Console.
-Automated Order Notifications
-Purchases trigger custom order emails to admin with detailed order data.
+Real-Time Catalog Updates
+Claim-authorized admins manage products through the validated backend API.
+Order Drafts
+The backend calculates draft subtotals from catalog prices. Payments, inventory reservations and order notifications are not enabled.
 Shared Codebase
 UI and logic are shared across Android and Desktop for consistency and maintainability.
 Modular Architecture

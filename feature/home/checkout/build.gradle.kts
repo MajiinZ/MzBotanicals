@@ -48,7 +48,6 @@ kotlin {
             implementation(libs.kotlinx.serialization)
 
             implementation(libs.messagebar.kmp)
-            implementation(libs.browser.kmp)
 
             implementation(project(path = ":shared"))
             implementation(project(path = ":data"))

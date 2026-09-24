@@ -1,0 +1,16 @@
+.git
+**/build
+**/.gradle
+**/node_modules
+.env
+.env.*
+**/.env
+**/.env.*
+*service-account*.json
+*serviceAccount*.json
+**/*service-account*.json
+**/*serviceAccount*.json
+**/google-services.json
+*.mp4
+work
+*-debug.log

@@ -7,6 +7,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import org.mz.admin.AdminPanelViewModel
 import org.mz.data.AdminRepositoryImpl
+import org.mz.data.BackendClient
 import org.mz.data.CustomerRepositoryImpl
 import org.mz.data.OrderRepositoryImpl
 import org.mz.data.ProductRepositoryImpl
@@ -27,10 +28,11 @@ import org.mz.killrs.CheckoutViewModel
 
 
 val sharedModule = module {
-    single<CustomerRepository>{CustomerRepositoryImpl()}
-    single<AdminRepository>{ AdminRepositoryImpl() }
+    single { BackendClient() }
+    single<CustomerRepository>{CustomerRepositoryImpl(get())}
+    single<AdminRepository>{ AdminRepositoryImpl(get()) }
     single<ProductRepository>{ ProductRepositoryImpl() }
-    single<OrderRepository>{ OrderRepositoryImpl(get()) }
+    single<OrderRepository>{ OrderRepositoryImpl() }
 
     viewModelOf(::AuthViewModel)
     viewModelOf(::HomeGraphViewModel)

@@ -20,7 +20,8 @@ data class Product @OptIn(ExperimentalTime::class) constructor(
     val amountOfSeeds: String? = null,
     val isPopular: Boolean = false,
     val isNew: Boolean = false,
-    val isDiscounted: Boolean = false
+    val isDiscounted: Boolean = false,
+    val revision: Long = 0
 )
 
 enum class ProductCategory(

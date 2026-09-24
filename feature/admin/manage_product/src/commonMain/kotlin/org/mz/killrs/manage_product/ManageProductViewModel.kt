@@ -30,7 +30,8 @@ data class ManageProductState(
     val price: Double = 0.0,
     val isNew: Boolean = false,
     val isPopular: Boolean = false,
-    val isDiscounted: Boolean = false
+    val isDiscounted: Boolean = false,
+    val revision: Long = 0
 )
 
 class ManageProductViewModel(
@@ -85,7 +86,8 @@ class ManageProductViewModel(
             price = product.price,
             isNew = product.isNew,
             isPopular = product.isPopular,
-            isDiscounted = product.isDiscounted
+            isDiscounted = product.isDiscounted,
+            revision = product.revision
         )
     }
 
@@ -110,9 +112,17 @@ class ManageProductViewModel(
                         productId = productId,
                         downloadUrl = downloadUrl,
                         onSuccess = {
-                            onSuccess()
-                            updateThumbnailUploaderState(RequestState.Success(Unit))
-                            updateThumbnail(downloadUrl)
+                            viewModelScope.launch {
+                                val latest = adminRepository.readProductById(productId)
+                                if (latest.isSuccess()) {
+                                    screenState = screenState.copy(revision = latest.getSuccessData().revision)
+                                    updateThumbnail(downloadUrl)
+                                    updateThumbnailUploaderState(RequestState.Success(Unit))
+                                    onSuccess()
+                                } else {
+                                    updateThumbnailUploaderState(RequestState.Error("Image saved. Reload the product before editing it again."))
+                                }
+                            }
 
                         },
                         onError = { msg -> updateThumbnailUploaderState(RequestState.Error(msg)) }
@@ -156,7 +166,8 @@ class ManageProductViewModel(
                         price = screenState.price,
                         isNew = screenState.isNew,
                         isPopular = screenState.isPopular,
-                        isDiscounted = screenState.isDiscounted
+                        isDiscounted = screenState.isDiscounted,
+                        revision = screenState.revision
                     ),
                     onSuccess = onSuccess,
                     onError = onError

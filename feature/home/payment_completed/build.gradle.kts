@@ -40,7 +40,6 @@ kotlin {
             implementation(libs.compose.navigation)
 
             implementation(libs.auth.firebase.kmp)
-            implementation(libs.splash.screen)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
 
