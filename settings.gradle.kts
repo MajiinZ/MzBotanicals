@@ -1,4 +1,4 @@
-rootProject.name = "KillrsGenetics"
+rootProject.name = "MzBotanicals"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -61,3 +61,4 @@ include(":shared")
 include(":server")
 include(":shared")
 include(":webApp")
+include(":desktopFirebase")

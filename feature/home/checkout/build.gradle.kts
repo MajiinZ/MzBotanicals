@@ -20,12 +20,15 @@ kotlin {
     jvm("desktop")
 
 
+
+
     sourceSets {
         val desktopMain by getting
 
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.android.client)
+            implementation(libs.browser.kmp)
         }
 
         commonMain.dependencies {
@@ -48,7 +51,11 @@ kotlin {
             implementation(libs.kotlinx.serialization)
 
             implementation(libs.messagebar.kmp)
-            implementation(libs.browser.kmp)
+
+            implementation(libs.coil3)
+            implementation(libs.coil3.compose)
+            implementation(libs.coil3.compose.core)
+            implementation(libs.coil3.network.ktor)
 
             implementation(project(path = ":shared"))
             implementation(project(path = ":data"))

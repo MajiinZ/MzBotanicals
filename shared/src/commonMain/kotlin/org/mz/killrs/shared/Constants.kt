@@ -3,7 +3,7 @@ package org.mz.killrs.shared
 
 
 object Constants {
-    const val SERVER_PORT = 8080
+    const val SERVER_PORT = 8081
 
     const val WEB_CLIENT_ID = "623171350158-ua9j5hm633ff73gqlk8tehbil5h9jr8l.apps.googleusercontent.com"
 
@@ -11,4 +11,6 @@ object Constants {
 
     const val MAX_QUANTITY = 10
     const val MIN_QUANTITY = 1
+
+    const val DEFAULT_QUANTITY = 1
 }

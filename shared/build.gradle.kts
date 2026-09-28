@@ -10,6 +10,11 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
+compose.resources {
+    // Keep resource imports stable when the root project is renamed.
+    packageOfResClass = "killrsgenetics.shared.generated.resources"
+}
+
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
