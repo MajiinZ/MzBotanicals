@@ -7,6 +7,7 @@ import org.mz.killrs.shared.domain.Customer
 import org.mz.killrs.shared.util.RequestState
 
 interface CustomerRepository {
+    suspend fun updateProfilePhoto(file: dev.gitlive.firebase.storage.File?): RequestState<String?>
     fun getCurrentUserId(): String?
     suspend fun createCustomer(
         user: FirebaseUser?,

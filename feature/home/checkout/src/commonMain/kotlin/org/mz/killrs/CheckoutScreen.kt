@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToLong
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.mz.killrs.shared.Exo2FontRegular
@@ -34,7 +35,6 @@ import org.mz.killrs.shared.TextWhite
 import org.mz.killrs.shared.component.CheckoutForm
 import org.mz.killrs.shared.component.PrimaryButton
 import org.mz.killrs.shared.util.RequestState
-import org.mz.killrs.shared.util.formatUsd
 import rememberMessageBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +69,7 @@ fun CheckoutScreen(
                 },
                 actions = {
                     Text(
-                        text = formatUsd(totalAmount),
+                        text = formatCheckoutTotal(totalAmount),
                         fontSize = FontSize.EXTRA_MEDIUM,
                         fontWeight = FontWeight.Medium,
                         color = TextPrimary
@@ -154,4 +154,12 @@ fun CheckoutScreen(
             }
         }
     }
+}
+
+private fun formatCheckoutTotal(amount: Double): String {
+    val cents = (amount * 100).roundToLong()
+    val sign = if (cents < 0) "-" else ""
+    val dollars = kotlin.math.abs(cents / 100)
+    val fraction = kotlin.math.abs(cents % 100).toString().padStart(2, '0')
+    return "${sign}$$dollars.$fraction"
 }

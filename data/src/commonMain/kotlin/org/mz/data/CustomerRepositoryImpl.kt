@@ -4,6 +4,7 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
+import dev.gitlive.firebase.storage.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -14,6 +15,27 @@ import org.mz.killrs.shared.Constants.ADMIN_EMAIL
 import org.mz.killrs.shared.util.RequestState
 
 class CustomerRepositoryImpl : CustomerRepository {
+    @OptIn(kotlin.uuid.ExperimentalUuidApi::class)
+    override suspend fun updateProfilePhoto(file: dev.gitlive.firebase.storage.File?): RequestState<String?> {
+        return try {
+            val userId = getCurrentUserId() ?: error("Please sign in to change your photo.")
+            val url = if (file == null) null else kotlinx.coroutines.withTimeout(30_000) {
+                val reference = Firebase.storage.reference.child("profile_images/$userId/${kotlin.uuid.Uuid.random()}")
+                reference.putFile(file)
+                reference.getDownloadUrl()
+            }
+            check(getCurrentUserId() == userId) { "Your account changed. Please try again." }
+            Firebase.firestore.collection("customer").document(userId)
+                .update("profileImageUrl" to url)
+            RequestState.Success(url)
+        } catch (error: kotlinx.coroutines.TimeoutCancellationException) {
+            RequestState.Error("Photo upload timed out. Please try again.")
+        } catch (error: kotlinx.coroutines.CancellationException) {
+            throw error
+        } catch (error: Exception) {
+            RequestState.Error("Unable to save profile photo: ${error.message}")
+        }
+    }
     override fun getCurrentUserId(): String? {
         return Firebase.auth.currentUser?.uid
     }
@@ -67,6 +89,7 @@ class CustomerRepositoryImpl : CustomerRepository {
                         if (document.exists) {
                             val customer = Customer(
                                 id = document.id,
+                                profileImageUrl = document.get<String?>(field = "profileImageUrl"),
                                 firstName = document.get(field = "firstName"),
                                 lastName = document.get(field = "lastName"),
                                 email = document.get(field = "email"),

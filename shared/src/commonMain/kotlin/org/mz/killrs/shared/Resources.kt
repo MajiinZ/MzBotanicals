@@ -11,7 +11,8 @@ import killrsgenetics.shared.generated.resources.google_logo
 import killrsgenetics.shared.generated.resources.home
 import killrsgenetics.shared.generated.resources.info
 import killrsgenetics.shared.generated.resources.hamburger_menu
-import killrsgenetics.shared.generated.resources.killrs_logo_blk
+import killrsgenetics.shared.generated.resources.mz_brand
+import killrsgenetics.shared.generated.resources.mz_welcome
 import killrsgenetics.shared.generated.resources.menu
 import killrsgenetics.shared.generated.resources.minus
 import killrsgenetics.shared.generated.resources.profile
@@ -60,7 +61,8 @@ object Resources {
         val GoogleLogo = Res.drawable.google_logo
 
         //   val PaypalLogo = Res.drawable.paypal_logo
-        val KillrsLogo = Res.drawable.killrs_logo_blk
+        val KillrsLogo = Res.drawable.mz_brand
+        val WelcomeArtwork = Res.drawable.mz_welcome
 
         val Delete = Res.drawable.delete
     }

@@ -24,10 +24,13 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
             implementation(libs.coil3.compose)
         }
 
         commonMain.dependencies {
+            implementation(libs.firebase.storage)
+            implementation(libs.coil3.compose)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

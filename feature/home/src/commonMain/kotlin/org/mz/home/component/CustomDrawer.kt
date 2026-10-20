@@ -1,6 +1,17 @@
 package org.mz.home.component
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
+import coil3.compose.AsyncImage
+import org.jetbrains.compose.resources.painterResource
+import org.mz.killrs.shared.Resources
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -39,9 +50,34 @@ fun CustomDrawer(
         modifier = Modifier
             .fillMaxHeight()
             .fillMaxWidth(0.6f)
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 12.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+        val profile = customer.getSuccessDataOrNull()
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .clickable(role = Role.Button, onClickLabel = "Open profile", onClick = onProfileClick)
+                .padding(vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AsyncImage(
+                model = profile?.profileImageUrl,
+                fallback = painterResource(Resources.Image.KillrsLogo),
+                error = painterResource(Resources.Image.KillrsLogo),
+                contentDescription = "Profile picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(72.dp).clip(CircleShape)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = profile?.let { "${it.firstName} ${it.lastName}".trim() }
+                    ?.takeIf { it.isNotEmpty() } ?: "My Profile",
+                color = TextPrimary,
+                textAlign = TextAlign.Center,
+                maxLines = 2
+            )
+        }
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = "MZBotanicals",
@@ -59,7 +95,7 @@ fun CustomDrawer(
             fontFamily = Exo2FontRegular(),
             fontSize = FontSize.REGULAR
         )
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         DrawerItem.entries.take(6).forEach { item ->
             DrawerItemCard(
                 drawerItem = item,
@@ -82,7 +118,7 @@ fun CustomDrawer(
             Spacer(modifier = Modifier.height(12.dp))
 
         }
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(12.dp))
         AnimatedContent(targetState = customer) { customerState ->
             if (customerState.isSuccess() && customerState.getSuccessData().isAdmin == true) {
                 DrawerItemCard(

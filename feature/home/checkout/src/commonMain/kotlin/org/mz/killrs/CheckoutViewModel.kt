@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import org.mz.data.MockOrderRepository
+import org.mz.killrs.shared.domain.MockOrder
+import org.mz.killrs.shared.domain.MockOrderItem
 import org.mz.data.domain.CustomerRepository
 import org.mz.data.domain.ProductRepository
 import org.mz.killrs.shared.component.StateOfUs
 import org.mz.killrs.shared.component.statesOfUs
 import org.mz.killrs.shared.PhoneNumber
-import org.mz.killrs.shared.domain.MockOrder
-import org.mz.killrs.shared.domain.MockOrderItem
 import org.mz.killrs.shared.util.RequestState
 import kotlin.math.abs
 import kotlin.time.Clock

@@ -21,7 +21,8 @@ data class Customer(
     val dateOfBirth: String,
     val gender: String,
     val cart: List<CartItem> = emptyList(),
-    val isAdmin: Boolean? = false
+    val isAdmin: Boolean? = false,
+    val profileImageUrl: String? = null
 )
 
 @Serializable

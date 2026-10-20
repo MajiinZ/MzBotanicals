@@ -1,5 +1,7 @@
 package org.mz.killrs.shared.component
 
+import org.mz.killrs.shared.domain.displayDescription
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -77,7 +79,7 @@ fun ProductCard(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = product.description,
+                text = product.displayDescription,
                 modifier = Modifier.alpha(Alpha.HALF),
                 fontFamily = Exo2FontRegular(),
                 fontSize = FontSize.REGULAR,

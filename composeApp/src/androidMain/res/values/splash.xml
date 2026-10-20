@@ -1,15 +1,1 @@
-<!-- res/values/themes.xml -->
-<resources>
-    <style name="Theme.Killrs.Splash" parent="Theme.SplashScreen">
-        <!-- Black background -->
-        <item name="windowSplashScreenBackground">#000000</item>
-
-        <!-- Full logo -->
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_killrs_foreground</item>
-
-        <!-- Optional: Size -->
-
-        <!-- Go to NoActionBar theme after splash -->
-        <item name="postSplashScreenTheme">@style/Theme.Killrs</item>
-    </style>
-</resources>
+<resources><style name="Theme.Killrs.Splash" parent="Theme.SplashScreen"><item name="windowSplashScreenBackground">@color/mz_brand_green</item><item name="windowSplashScreenAnimatedIcon">@drawable/mz_icon_foreground</item><item name="postSplashScreenTheme">@style/Theme.Killrs</item></style></resources>

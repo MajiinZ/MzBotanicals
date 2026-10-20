@@ -35,6 +35,27 @@ class ProfileViewModel(
         private set
 
     private var customer: Customer? = null
+    var profileImageUrl: String? by mutableStateOf(null)
+        private set
+    var isSavingPhoto by mutableStateOf(false)
+        private set
+
+    fun savePhoto(file: dev.gitlive.firebase.storage.File?, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        if (isSavingPhoto) return
+        isSavingPhoto = true
+        viewModelScope.launch {
+            try {
+                when (val result = customerRepository.updateProfilePhoto(file)) {
+                    is RequestState.Success -> {
+                        profileImageUrl = result.data
+                        onSuccess()
+                    }
+                    is RequestState.Error -> onError(result.message)
+                    else -> Unit
+                }
+            } finally { isSavingPhoto = false }
+        }
+    }
 
     // ✅ Improved validation
     val isFormValid: Boolean
@@ -52,6 +73,7 @@ class ProfileViewModel(
                 if (data.isSuccess()) {
                     val fetchedCustomer = data.getSuccessData()
                     customer = fetchedCustomer
+                    profileImageUrl = fetchedCustomer.profileImageUrl
                     screenState = ProfileScreenState(
                         id = fetchedCustomer.id,
                         firstName = fetchedCustomer.firstName,

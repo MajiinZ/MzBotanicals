@@ -296,8 +296,7 @@ fun HomeGraphScreen(
                                 )
                             }
                             composable<Screen.Orders> {
-                                OrdersScreen(
-                                    navigateToShop = { navigateFromDrawer(Screen.ProductsOverview) }
+                               OrdersScreen(navigateToShop = { navigateFromDrawer(Screen.ProductsOverview) }
                                 )
                             }
                             composable<Screen.Settings> {

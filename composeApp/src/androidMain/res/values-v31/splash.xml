@@ -1,18 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.Killrs" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Background color -->
-
-        <item name="android:windowSplashScreenBackground">#000000</item>
-
-        <!-- Icon (your full logo) -->
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_killrs</item>
-
-        <!-- Optional: Scale your logo -->
-
-        <!-- Removes window background after splash exits -->
-        <item name="postSplashScreenTheme">@style/Theme.SplashScreen</item>
-    </style>
-
-</resources>
+<resources><style name="Theme.Killrs.Splash" parent="Theme.SplashScreen"><item name="windowSplashScreenBackground">@color/mz_brand_green</item><item name="windowSplashScreenAnimatedIcon">@drawable/mz_icon_foreground</item><item name="postSplashScreenTheme">@style/Theme.Killrs</item></style></resources>

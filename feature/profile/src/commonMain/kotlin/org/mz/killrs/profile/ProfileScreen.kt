@@ -1,6 +1,15 @@
 package org.mz.killrs.profile
 
 import ContentWithMessageBar
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.CircularProgressIndicator
+import coil3.compose.AsyncImage
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -105,6 +114,42 @@ fun ProfileScreen(
                     onLoading = { LoadingCard(modifier = Modifier.fillMaxSize()) },
                     onSuccess = {
                         Column(modifier = Modifier.fillMaxSize()) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                AsyncImage(
+                                    model = viewModel.profileImageUrl,
+                                    fallback = painterResource(Resources.Image.KillrsLogo),
+                                    error = painterResource(Resources.Image.KillrsLogo),
+                                    contentDescription = "Profile picture",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.size(88.dp).clip(CircleShape)
+                                )
+                                if (viewModel.isSavingPhoto) {
+                                    CircularProgressIndicator(Modifier.size(24.dp))
+                                    Text("Saving photo…", color = TextPrimary)
+                                }
+                                ProfilePhotoPicker(
+                                    enabled = !viewModel.isSavingPhoto,
+                                    hasPhoto = viewModel.profileImageUrl != null,
+                                    onSelected = { file ->
+                                        viewModel.savePhoto(file,
+                                            onSuccess = { messageBarState.addSuccess("Profile photo updated") },
+                                            onError = { messageBarState.addError(it) })
+                                    }
+                                )
+                                if (viewModel.profileImageUrl != null) {
+                                    TextButton(
+                                        enabled = !viewModel.isSavingPhoto,
+                                        onClick = {
+                                            viewModel.savePhoto(null,
+                                                onSuccess = { messageBarState.addSuccess("Profile photo removed") },
+                                                onError = { messageBarState.addError(it) })
+                                        }
+                                    ) { Text("Remove photo") }
+                                }
+                            }
                             ProfileForm(
                                 modifier = Modifier.weight(1f),
                                 state = screenState.state.abbreviation,

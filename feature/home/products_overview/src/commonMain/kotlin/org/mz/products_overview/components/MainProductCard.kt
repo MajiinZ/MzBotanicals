@@ -1,5 +1,7 @@
 package org.mz.products_overview.components
 
+import org.mz.killrs.shared.domain.displayDescription
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
@@ -133,7 +135,7 @@ fun MainProductCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = product.description,
+                text = product.displayDescription,
                 fontSize = FontSize.REGULAR,
                 lineHeight = FontSize.REGULAR * 1.3f,
                 color = TextWhite.copy(alpha = Alpha.HALF),

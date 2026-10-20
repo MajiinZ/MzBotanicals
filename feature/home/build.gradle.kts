@@ -25,6 +25,7 @@ kotlin {
 
 
         commonMain.dependencies {
+            implementation(libs.coil3.compose)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
