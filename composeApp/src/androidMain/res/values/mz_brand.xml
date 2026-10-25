@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="mz_brand_green">#00452C</color>
+
+    <style name="Theme.Killrs" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/mz_brand_green</item>
+    </style>
+</resources>

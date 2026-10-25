@@ -15,15 +15,15 @@ enum class BottomBarDestination(
         title = "Home",
         screen = Screen.ProductsOverview
     ),
+    Categories(
+        icon = Resources.Icon.Categories,
+        title = "Explore",
+        screen = Screen.Categories
+    ),
     Cart(
         icon = Resources.Icon.ShoppingCart,
         title = "Cart",
         screen = Screen.Cart
-    ),
-    Categories(
-        icon = Resources.Icon.Categories,
-        title = "Category Search",
-        screen = Screen.Categories
     ),
     Profile(
         icon = Resources.Icon.Profile,

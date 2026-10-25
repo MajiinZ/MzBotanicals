@@ -11,6 +11,7 @@ import killrsgenetics.shared.generated.resources.google_logo
 import killrsgenetics.shared.generated.resources.home
 import killrsgenetics.shared.generated.resources.info
 import killrsgenetics.shared.generated.resources.hamburger_menu
+import killrsgenetics.shared.generated.resources.leaf
 import killrsgenetics.shared.generated.resources.mz_brand
 import killrsgenetics.shared.generated.resources.mz_welcome
 import killrsgenetics.shared.generated.resources.menu
@@ -27,7 +28,7 @@ object Resources {
 
     object Icon {
         val ShoppingCart = Res.drawable.shopping_cart
-        val Categories = Res.drawable.info
+        val Categories = Res.drawable.leaf
         val Dollar = Res.drawable.add_a_photo
         val Home = Res.drawable.home
         val Close = Res.drawable.close
@@ -37,7 +38,7 @@ object Resources {
         val Delete = Res.drawable.delete
         val Info = Res.drawable.info
         val ShoppingCartFilled = Res.drawable.shopping_cart
-        val CategoriesFilled = Res.drawable.info
+        val CategoriesFilled = Res.drawable.leaf
         val DollarFilled = Res.drawable.add_a_photo
         val HomeFilled = Res.drawable.home
         val CloseFilled = Res.drawable.close

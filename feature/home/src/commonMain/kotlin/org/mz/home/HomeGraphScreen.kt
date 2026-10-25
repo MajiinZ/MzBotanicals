@@ -33,7 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -67,6 +69,9 @@ import org.mz.products_overview.ProductsOverviewScreen
 import rememberMessageBarState
 
 
+private val CollectionSurface = Color(0xFFF7F5EC)
+private val CollectionGreen = Color(0xFF124735)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeGraphScreen(
@@ -90,6 +95,12 @@ fun HomeGraphScreen(
                 route.contains(BottomBarDestination.Categories.screen.toString()) -> BottomBarDestination.Categories
                 else -> BottomBarDestination.ProductsOverview
             }
+        }
+    }
+
+    val isCollectionScreen by remember {
+        derivedStateOf {
+            selectedDestination == BottomBarDestination.Categories
         }
     }
 
@@ -127,7 +138,7 @@ fun HomeGraphScreen(
             when {
                 route.contains(Screen.Orders.toString()) -> "Orders"
                 route.contains(Screen.Settings.toString()) -> "Settings"
-                else -> selectedDestination.title
+                else -> if (isCollectionScreen) "MZBotanicals" else selectedDestination.title
             }
         }
     }
@@ -171,7 +182,7 @@ fun HomeGraphScreen(
                 .shadow(20.dp, RoundedCornerShape(20.dp))
         ) {
             Scaffold(
-                containerColor = Surface,
+                containerColor = if (isCollectionScreen) CollectionSurface else Surface,
                 topBar = {
                     CenterAlignedTopAppBar(
                         title = {
@@ -179,12 +190,20 @@ fun HomeGraphScreen(
                                 Text(
                                     text = title,
                                     fontFamily = Exo2FontRegular(),
-                                    fontSize = FontSize.LARGE,
-                                    color = TextPrimary
+                                    fontSize = if (isCollectionScreen) 24.sp else FontSize.LARGE,
+                                    color = if (isCollectionScreen) CollectionGreen else TextPrimary
                                 )
                             }
                         },
                         actions = {
+                            AnimatedVisibility(visible = isCollectionScreen) {
+                                Icon(
+                                    modifier = Modifier.padding(end = 16.dp),
+                                    painter = painterResource(Resources.Icon.Categories),
+                                    contentDescription = "MZBotanicals leaf",
+                                    tint = CollectionGreen
+                                )
+                            }
                             AnimatedVisibility(
                                 visible = selectedDestination == BottomBarDestination.Cart,
                             ) {
@@ -230,11 +249,11 @@ fun HomeGraphScreen(
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Surface,
-                            titleContentColor = TextPrimary,
-                            navigationIconContentColor = TextPrimary,
-                            actionIconContentColor = IconPrimary,
-                            scrolledContainerColor = Surface
+                            containerColor = if (isCollectionScreen) CollectionSurface else Surface,
+                            titleContentColor = if (isCollectionScreen) CollectionGreen else TextPrimary,
+                            navigationIconContentColor = if (isCollectionScreen) CollectionGreen else TextPrimary,
+                            actionIconContentColor = if (isCollectionScreen) CollectionGreen else IconPrimary,
+                            scrolledContainerColor = if (isCollectionScreen) CollectionSurface else Surface
                         )
                     )
                 }
@@ -248,14 +267,14 @@ fun HomeGraphScreen(
                         ),
                     messageBarState = messageBarState,
                     errorMaxLines = 3,
-                    contentBackgroundColor = Surface
+                    contentBackgroundColor = if (isCollectionScreen) CollectionSurface else Surface
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(
-                                top = padding.calculateTopPadding(),
-                                bottom = padding.calculateBottomPadding()
+                                top = if (isCollectionScreen) 0.dp else padding.calculateTopPadding(),
+                                bottom = if (isCollectionScreen) 0.dp else padding.calculateBottomPadding()
                             )
                     ) {
                         NavHost(
